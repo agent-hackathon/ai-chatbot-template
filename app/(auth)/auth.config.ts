@@ -36,4 +36,17 @@ export const authConfig = {
       return true;
     },
   },
+  trustHost: true, // Add this line for Amplify
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true,
+        domain: '.d2gzk5ozyqicbv.amplifyapp.com' // Add your Amplify domain
+      }
+    }
+  }
 } satisfies NextAuthConfig;
