@@ -1,5 +1,7 @@
 import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+import { validateEnv } from '@/lib/env';
+
 import { z } from 'zod';
 
 import { auth } from '@/app/(auth)/auth';
@@ -21,7 +23,7 @@ const FileSchema = z.object({
 
 export async function POST(request: Request) {
   const session = await auth();
-
+  validateEnv();
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
