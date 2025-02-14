@@ -3,11 +3,23 @@ import NextAuth, { type User, type Session } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
 import { getUser } from '@/lib/db/queries';
-
+import { validateEnv } from '@/lib/env';
 import { authConfig } from './auth.config';
 
 interface ExtendedSession extends Session {
   user: User;
+}
+
+// Add environment validation at the start
+validateEnv();
+
+// Log environment state in development
+if (process.env.NODE_ENV === 'development') {
+  console.log('Auth environment check:', {
+    hasAuthSecret: !!process.env.AUTH_SECRET,
+    hasNextAuthSecret: !!process.env.NEXTAUTH_SECRET,
+    nextAuthUrl: process.env.NEXTAUTH_URL,
+  });
 }
 
 export const {

@@ -36,6 +36,7 @@ export const authConfig = {
       return true;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET, // Add this line
   trustHost: true, // Add this line for Amplify
   cookies: {
     sessionToken: {
