@@ -9,6 +9,7 @@ interface ExtendedSession extends Session {
   user: User;
 }
 
+console.log("🔥 DEBUG: POSTGRES_URL at runtime:", process.env.POSTGRES_URL);
 
 
 // Log environment state in development
