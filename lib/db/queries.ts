@@ -23,7 +23,14 @@ import { ArtifactKind } from '@/components/artifact';
 // https://authjs.dev/reference/adapter/drizzle
 
 // biome-ignore lint: Forbidden non-null assertion.
-const client = postgres(process.env.POSTGRES_URL!);
+if (!process.env.POSTGRES_URL) {
+  console.error("🔥 ERROR: POSTGRES_URL is missing at runtime!");
+} else {
+  console.log("🔥 DEBUG: POSTGRES_URL found:", process.env.POSTGRES_URL);
+}
+
+// Force load POSTGRES_URL (even in edge runtime)
+const client = postgres(process.env.POSTGRES_URL || "MISSING_POSTGRES_URL");
 const db = drizzle(client);
 
 export async function getUser(email: string): Promise<Array<User>> {
