@@ -1,3 +1,5 @@
+export const runtime = 'nodejs';
+
 import { auth } from '@/app/(auth)/auth';
 import { ArtifactKind } from '@/components/artifact';
 import {

@@ -1,3 +1,5 @@
+export const runtime = 'nodejs';
+
 import { auth } from '@/app/(auth)/auth';
 import { getChatsByUserId } from '@/lib/db/queries';
 
