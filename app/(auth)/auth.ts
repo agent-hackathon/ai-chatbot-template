@@ -9,17 +9,7 @@ interface ExtendedSession extends Session {
   user: User;
 }
 
-console.log("🔥 DEBUG: POSTGRES_URL at runtime:", process.env.POSTGRES_URL);
 
-
-// Log environment state in development
-if (process.env.NODE_ENV === 'development') {
-  console.log('Auth environment check:', {
-    hasAuthSecret: !!process.env.AUTH_SECRET,
-    hasNextAuthSecret: !!process.env.NEXTAUTH_SECRET,
-    nextAuthUrl: process.env.NEXTAUTH_URL,
-  });
-}
 
 export const {
   handlers: { GET, POST },
