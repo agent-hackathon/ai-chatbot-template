@@ -21,6 +21,9 @@ const nextConfig: NextConfig = {
   serverRuntimeConfig: {
     AUTH_SECRET: process.env.AUTH_SECRET,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    POSTGRES_URL: process.env.POSTGRES_URL,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    BLOG_READ_WRITE_TOKEN: process.env.BLOG_READ_WRITE_TOKEN,
   },
   // Add publicRuntimeConfig for public variables
   publicRuntimeConfig: {
