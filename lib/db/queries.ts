@@ -4,6 +4,7 @@ import { genSaltSync, hashSync } from 'bcrypt-ts';
 import { and, asc, desc, eq, gt, gte, inArray } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import getConfig from 'next/config';
 
 import {
   user,
@@ -28,9 +29,12 @@ if (!process.env.POSTGRES_URL) {
 } else {
   console.log("🔥 DEBUG: POSTGRES_URL found:", process.env.POSTGRES_URL);
 }
+const { serverRuntimeConfig } = getConfig();
+const dbUrl = process.env.POSTGRES_URL || serverRuntimeConfig.POSTGRES_URL;
+// Then use dbUrl in your postgres() call
+const client = postgres(dbUrl || "MISSING_POSTGRES_URL");
 
-// Force load POSTGRES_URL (even in edge runtime)
-const client = postgres(process.env.POSTGRES_URL || "MISSING_POSTGRES_URL");
+
 const db = drizzle(client);
 
 export async function getUser(email: string): Promise<Array<User>> {
