@@ -27,6 +27,10 @@ import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
+import getConfig from 'next/config';
+const { serverRuntimeConfig } = getConfig();
+process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || serverRuntimeConfig.OPENAI_API_KEY;
+
 
 export const maxDuration = 60;
 
