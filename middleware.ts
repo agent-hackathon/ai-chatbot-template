@@ -16,6 +16,8 @@ export default auth((req: NextRequest) => {
     hasAuthSecret: !!process.env.AUTH_SECRET,
     hasNextAuthSecret: !!process.env.NEXTAUTH_SECRET,
     nextAuthUrl: process.env.NEXTAUTH_URL,
+    postgresUrl: process.env.POSTGRES_URL,
+    openAiKey: process.env.OPENAI_API_KEY,
     path: req.nextUrl.pathname,
   });
 });
