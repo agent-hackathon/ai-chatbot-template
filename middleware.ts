@@ -14,5 +14,5 @@ export default auth((req: NextRequest) => {
 });
 
 export const config = {
-  matcher: ['/', '/:id', '/api/:path*', '/login', '/register'],
+  matcher: ['/', '/:id', '/api/:path*', '/login'],
 };

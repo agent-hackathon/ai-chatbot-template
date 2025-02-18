@@ -11,6 +11,8 @@ export const authConfig = {
   ],
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
+      console.log('Auth object:', auth);
+
       const isLoggedIn = !!auth?.user;
       const isOnChat = nextUrl.pathname.startsWith('/');
       const isOnRegister = nextUrl.pathname.startsWith('/register');
@@ -45,9 +47,11 @@ export const authConfig = {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: true,
-        domain: '.d2gzk5ozyqicbv.amplifyapp.com' // Add your Amplify domain
-      }
-    }
+        secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
+        domain: process.env.NODE_ENV === 'production'
+          ? '.d2gzk5ozyqicbv.amplifyapp.com'
+          : undefined, // Let the browser handle domain automatically in development
+      },
+    },
   }
 } satisfies NextAuthConfig;
