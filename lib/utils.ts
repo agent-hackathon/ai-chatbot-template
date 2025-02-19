@@ -22,6 +22,10 @@ export const fetcher = async (url: string) => {
   const res = await fetch(url);
 
   if (!res.ok) {
+    // Redirect to login if unauthorized
+    window.location.href = '/login';
+    // Optionally, you could also throw an error to stop further execution
+    // throw new Error('Unauthorized, redirecting to login...');
     const error = new Error(
       'An error occurred while fetching the data.',
     ) as ApplicationError;

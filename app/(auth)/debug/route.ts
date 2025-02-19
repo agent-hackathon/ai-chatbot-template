@@ -1,4 +1,3 @@
-// app/api/debug-env/route.ts
 export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';

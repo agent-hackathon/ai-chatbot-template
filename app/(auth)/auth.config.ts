@@ -46,10 +46,12 @@ export const authConfig = {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
-        domain: process.env.NODE_ENV === 'production'
-          ? '.d2gzk5ozyqicbv.amplifyapp.com'
-          : undefined, // Let the browser handle domain automatically in development
+        secure: process.env.NODE_ENV === 'development'
+          ? false
+          : true,  // use secure cookies in production
+        domain: process.env.NODE_ENV === 'development'
+          ? undefined
+          : '.d2gzk5ozyqicbv.amplifyapp.com', // Let the browser handle domain automatically in development
       },
     },
   }
