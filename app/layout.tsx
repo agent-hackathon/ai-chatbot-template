@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
-
+import { auth } from './(auth)/auth';
 import { ThemeProvider } from '@/components/theme-provider';
-
+import { SessionProvider } from 'next-auth/react';
+import { ClientRootLayout } from './client-layout';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -40,13 +41,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html
       lang="en"
-      // `next-themes` injects an extra classname to the body element to avoid
-      // visual flicker before hydration. Hence the `suppressHydrationWarning`
-      // prop is necessary to avoid the React hydration mismatch warning.
-      // https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
       suppressHydrationWarning
     >
       <head>
@@ -63,8 +62,10 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Toaster position="top-center" />
-          {children}
+          <ClientRootLayout session={session}>
+            <Toaster position="top-center" />
+            {children}
+          </ClientRootLayout>
         </ThemeProvider>
       </body>
     </html>

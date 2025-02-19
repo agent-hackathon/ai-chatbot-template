@@ -10,16 +10,15 @@ export const authConfig = {
     // while this file is also used in non-Node.js environments
   ],
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      console.log('Auth object:', auth);
+    async authorized({ auth, request: { nextUrl } }) {
 
       const isLoggedIn = !!auth?.user;
-      const isOnChat = nextUrl.pathname.startsWith('/');
+      const isOnChat = nextUrl.pathname === '/' || nextUrl.pathname.startsWith('/chat');
       const isOnRegister = nextUrl.pathname.startsWith('/register');
       const isOnLogin = nextUrl.pathname.startsWith('/login');
 
       if (isLoggedIn && (isOnLogin || isOnRegister)) {
-        return Response.redirect(new URL('/', nextUrl as unknown as URL));
+        return Response.redirect(new URL('/', nextUrl.origin));
       }
 
       if (isOnRegister || isOnLogin) {
@@ -32,7 +31,7 @@ export const authConfig = {
       }
 
       if (isLoggedIn) {
-        return Response.redirect(new URL('/', nextUrl as unknown as URL));
+        return Response.redirect(new URL('/', nextUrl ));
       }
 
       return true;

@@ -23,12 +23,7 @@ import { ArtifactKind } from '@/components/artifact';
 // use the Drizzle adapter for Auth.js / NextAuth
 // https://authjs.dev/reference/adapter/drizzle
 
-// biome-ignore lint: Forbidden non-null assertion.
-if (!process.env.POSTGRES_URL) {
-  console.error("🔥 ERROR: POSTGRES_URL is missing at runtime!");
-} else {
-  console.log("🔥 DEBUG: POSTGRES_URL found:", process.env.POSTGRES_URL);
-}
+
 const { serverRuntimeConfig } = getConfig();
 const dbUrl = process.env.POSTGRES_URL || serverRuntimeConfig.POSTGRES_URL;
 // Then use dbUrl in your postgres() call
@@ -51,7 +46,8 @@ export async function createUser(email: string, password: string) {
   const hash = hashSync(password, salt);
 
   try {
-    return await db.insert(user).values({ email, password: hash });
+    await db.insert(user).values({ email, password: hash });
+    return await db.select().from(user).where(eq(user.email, email));
   } catch (error) {
     console.error('Failed to create user in database');
     throw error;
