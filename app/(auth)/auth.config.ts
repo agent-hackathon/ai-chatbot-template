@@ -10,14 +10,15 @@ export const authConfig = {
     // while this file is also used in non-Node.js environments
   ],
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
+    async authorized({ auth, request: { nextUrl } }) {
+
       const isLoggedIn = !!auth?.user;
-      const isOnChat = nextUrl.pathname.startsWith('/');
+      const isOnChat = nextUrl.pathname === '/' || nextUrl.pathname.startsWith('/chat');
       const isOnRegister = nextUrl.pathname.startsWith('/register');
       const isOnLogin = nextUrl.pathname.startsWith('/login');
 
       if (isLoggedIn && (isOnLogin || isOnRegister)) {
-        return Response.redirect(new URL('/', nextUrl as unknown as URL));
+        return Response.redirect(new URL('/', nextUrl.origin));
       }
 
       if (isOnRegister || isOnLogin) {
@@ -30,7 +31,7 @@ export const authConfig = {
       }
 
       if (isLoggedIn) {
-        return Response.redirect(new URL('/', nextUrl as unknown as URL));
+        return Response.redirect(new URL('/', nextUrl ));
       }
 
       return true;
@@ -45,9 +46,11 @@ export const authConfig = {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: true,
-        domain: '.d2gzk5ozyqicbv.amplifyapp.com' // Add your Amplify domain
-      }
-    }
+        secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
+        domain: process.env.NODE_ENV === 'production'
+          ? '.d2gzk5ozyqicbv.amplifyapp.com'
+          : undefined, // Let the browser handle domain automatically in development
+      },
+    },
   }
 } satisfies NextAuthConfig;

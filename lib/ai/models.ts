@@ -1,5 +1,4 @@
 import { openai } from '@ai-sdk/openai';
-import { fireworks } from '@ai-sdk/fireworks';
 import {
   customProvider,
   extractReasoningMiddleware,
