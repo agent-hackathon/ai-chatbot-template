@@ -1,6 +1,9 @@
 import NextAuth, { type Session, type User } from 'next-auth';
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import { getUser, createUser } from '@/lib/db/queries';
+import getConfig from 'next/config';
+
+const { serverRuntimeConfig } = getConfig();
 
 interface ExtendedSession extends Session {
   user: User;
@@ -10,10 +13,10 @@ if (!process.env.NEXTAUTH_SECRET) {
   throw new Error('Missing NEXTAUTH_SECRET environment variable');
 }
 
-if (!process.env.AUTH_MICROSOFT_ENTRA_ID_ID || 
-    !process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET || 
-    !process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER) {
-  throw new Error('Missing Microsoft Entra ID environment variables');
+if (!serverRuntimeConfig.AUTH_MICROSOFT_ENTRA_ID_ID || 
+  !serverRuntimeConfig.AUTH_MICROSOFT_ENTRA_ID_SECRET || 
+  !serverRuntimeConfig.AUTH_MICROSOFT_ENTRA_ID_ISSUER) {
+throw new Error('Missing Microsoft Entra ID environment variables');
 }
 
 export const {
@@ -25,9 +28,9 @@ export const {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     MicrosoftEntraID({
-      clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
-      clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
+      clientId: serverRuntimeConfig.AUTH_MICROSOFT_ENTRA_ID_ID,
+      clientSecret: serverRuntimeConfig.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      issuer: serverRuntimeConfig.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
     }),
   ],
   callbacks: {
