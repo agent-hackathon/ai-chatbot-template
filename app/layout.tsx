@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 import { auth } from './(auth)/auth';
 import { ThemeProvider } from '@/components/theme-provider';
-import { SessionProvider } from 'next-auth/react';
 import { ClientRootLayout } from './client-layout';
 import './globals.css';
 

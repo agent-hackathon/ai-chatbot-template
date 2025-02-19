@@ -32,12 +32,14 @@ export const {
   ],
   callbacks: {
     async signIn({ user }) {
+      if (!user.email) {
+        return false;
+      }
       // Automatically create a local user record if it doesn't exist.
-      const existingUser = await getUser(user.email!);
-      console.log('existingUser', existingUser);
+      const existingUser = await getUser(user.email);
       if (existingUser.length === 0) {
         console.log('creating user');
-        const [newUser] = await createUser(user.email!, '');
+        const [newUser] = await createUser(user.email, '');
         user.id = newUser.id;
       } else {
         user.id = existingUser[0].id;
