@@ -6,13 +6,15 @@ import { useEffect } from 'react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { status } = useSession();
+  const { status ,data: session} = useSession();
 
   useEffect(() => {
+    console.log('LoginPage useEffect: status =', status, 'session =', session);
     if (status === 'authenticated') {
+      console.log('user is authenticated, redirecting to /')
       router.push('/');
     }
-  }, [status, router]);
+  }, [status,session, router]);
 
   const handleAzureSignIn = async () => {
     // You can optionally pass a callback URL
