@@ -18,7 +18,9 @@ if (!serverRuntimeConfig.AUTH_MICROSOFT_ENTRA_ID_ID ||
   !serverRuntimeConfig.AUTH_MICROSOFT_ENTRA_ID_ISSUER) {
 throw new Error('Missing Microsoft Entra ID environment variables');
 }
-
+// Print all environment variables to your CloudWatch logs
+console.log('🔥 RUNTIME ENV VARS:', JSON.stringify(process.env, null, 2));
+console.log('NEXTAUTH_URL:', process.env.NEXTAUTH_URL)
 export const {
   handlers: { GET, POST },
   auth,
@@ -62,4 +64,5 @@ export const {
       return session;
     },
   },
+  trustHost: true,
 });
