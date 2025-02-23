@@ -4,40 +4,45 @@ export const authConfig = {
   pages: {
     signIn: '/login',
   },
-  providers: [
-    // added later in auth.ts since it requires bcrypt which is only compatible with Node.js
-    // while this file is also used in non-Node.js environments
-  ],
+  providers: [],
   callbacks: {
     async authorized({ auth, request: { nextUrl } }) {
-
+      console.log('🔥 authorized - Path:', nextUrl.pathname, 'Auth:', !!auth?.user);
       const isLoggedIn = !!auth?.user;
       const isOnChat = nextUrl.pathname === '/' || nextUrl.pathname.startsWith('/chat');
       const isOnRegister = nextUrl.pathname.startsWith('/register');
       const isOnLogin = nextUrl.pathname.startsWith('/login');
 
       if (isLoggedIn && (isOnLogin || isOnRegister)) {
+        console.log('🔥 authorized - Logged in, redirecting from login/register to /');
         return Response.redirect(new URL('/', nextUrl.origin));
       }
 
       if (isOnRegister || isOnLogin) {
-        return true; // Always allow access to register and login pages
+        console.log('🔥 authorized - Allowing access to register/login');
+        return true;
       }
 
       if (isOnChat) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
+        if (isLoggedIn) {
+          console.log('🔥 authorized - Logged in, allowing chat access');
+          return true;
+        }
+        console.log('🔥 authorized - Not logged in, blocking chat');
+        return false;
       }
 
       if (isLoggedIn) {
-        return Response.redirect(new URL('/', nextUrl ));
+        console.log('🔥 authorized - Logged in, redirecting to /');
+        return Response.redirect(new URL('/', nextUrl));
       }
 
+      console.log('🔥 authorized - Default allow');
       return true;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET, // Add this line
-  trustHost: true, // Add this line for Amplify
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
+  trustHost: true,
   cookies: {
     sessionToken: {
       name: `__Secure-next-auth.session-token`,
@@ -45,13 +50,9 @@ export const authConfig = {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: process.env.NODE_ENV === 'development'
-          ? false
-          : true,  // use secure cookies in production
-        domain: process.env.NODE_ENV === 'development'
-          ? undefined
-          : '.d2gzk5ozyqicbv.amplifyapp.com', // Let the browser handle domain automatically in development
+        secure: process.env.NODE_ENV === 'development' ? false : true,
+        domain: process.env.NODE_ENV === 'development' ? undefined : '.d2gzk5ozyqicbv.amplifyapp.com',
       },
     },
-  }
+  },
 } satisfies NextAuthConfig;

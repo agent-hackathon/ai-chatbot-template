@@ -6,24 +6,27 @@ import { useEffect } from 'react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { status ,data: session} = useSession();
+  const { status, data: session } = useSession();
 
   useEffect(() => {
-    console.log('LoginPage useEffect: status =', status, 'session =', session);
+    console.log('🔥 LoginPage - Status:', status, 'Session:', session);
     if (status === 'authenticated') {
-      console.log('user is authenticated, redirecting to /')
+      console.log('🔥 LoginPage - Authenticated, redirecting to /');
       router.push('/');
     }
-  }, [status,session, router]);
+  }, [status, session, router]);
 
   const handleAzureSignIn = async () => {
-    // You can optionally pass a callback URL
-    await signIn('azure-ad', { callbackUrl: '/' });
+    console.log('🔥 LoginPage - Starting Azure AD sign-in');
+    await signIn('microsoft-entra-id', { callbackUrl: '/' });
   };
-   // Show loading state while checking auth
-   if (status === 'loading') {
-    return null;
+
+  if (status === 'loading') {
+    console.log('🔥 LoginPage - Loading session...');
+    return <p>Loading...</p>;
   }
+
+  console.log('🔥 LoginPage - Rendering login UI');
   return (
     <div className="flex h-screen items-center justify-center bg-background">
       <div className="w-full max-w-md overflow-hidden rounded-2xl flex flex-col gap-12 p-4">
