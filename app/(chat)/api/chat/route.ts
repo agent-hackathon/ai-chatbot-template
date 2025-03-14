@@ -124,12 +124,6 @@ export async function POST(request: Request) {
       console.error('🔥 Chat API POST - Stream error:', error);
       return 'Oops, an error occurred!';
     },
-    headers: {
-      'Content-Type': 'text/event-stream', // Explicit SSE
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
-      'Transfer-Encoding': 'chunked', // Force chunked streaming
-    },
   });
 }
 
