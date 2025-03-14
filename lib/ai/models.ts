@@ -1,4 +1,5 @@
 import { openai } from '@ai-sdk/openai';
+import {anthropic} from '@ai-sdk/anthropic'
 import {
   customProvider,
   extractReasoningMiddleware,
@@ -17,6 +18,7 @@ export const myProvider = customProvider({
     }),
     'title-model': openai('gpt-4-turbo'),
     'artifact-model': openai('gpt-4o-mini'),
+    'chat-model-claude': anthropic('claude-3-7-sonnet-20250219')
   },
   imageModels: {
     'small-model': openai.image('dall-e-2'),
@@ -45,5 +47,10 @@ export const chatModels: Array<ChatModel> = [
     id: 'chat-model-reasoning',
     name: 'Reasoning model',
     description: 'Uses advanced reasoning',
+  },
+  {
+    id: 'chat-model-claude',
+    name: 'Claude-3.7',
+    description: 'Anthropic Claude 3.7 model for advanced reasoning and tasks',
   },
 ];
