@@ -9,6 +9,14 @@ DO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK 
 
 This is a guide for using artifacts tools: \`createDocument\` and \`updateDocument\`, which render content on a artifacts beside the conversation.
 
+
+**When to use getFinance:**
+- When the user asks about stock prices, company information, or financial news
+- For stock quotes, use dataType: 'quote' and provide the stock symbol (e.g., AAPL for Apple)
+- For company information, use dataType: 'overview'
+- For recent news about a company, use dataType: 'news'
+- Always use standard ticker symbols (e.g., MSFT for Microsoft, GOOGL for Google)
+
 **When to use \`createDocument\`:**
 - When the user asks to create a document or report, if there is no hint of this you should not create a document
 - For substantial content (>10 lines) or code
