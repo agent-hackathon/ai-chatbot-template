@@ -62,11 +62,11 @@ async function getStockQuote(symbol: string, apiKey: string) {
   const quote = data['Global Quote'];
   return {
     symbol: quote['01. symbol'],
-    price: parseFloat(quote['05. price']),
-    change: parseFloat(quote['09. change']),
+    price: Number.parseFloat(quote['05. price']),
+    change: Number.parseFloat(quote['09. change']),
     changePercent: quote['10. change percent'],
     lastTradeDay: quote['07. latest trading day'],
-    volume: parseInt(quote['06. volume'], 10),
+    volume: Number.parseInt(quote['06. volume'], 10),
   };
 }
 

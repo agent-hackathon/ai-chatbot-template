@@ -2,7 +2,6 @@
 'use client';
 
 import cx from 'classnames';
-import { useState } from 'react';
 
 interface StockQuote {
   symbol: string;
@@ -65,8 +64,8 @@ export function Finance({ financeData }: { financeData?: FinanceData }) {
   
   // Format large numbers (like market cap, volume)
   const formatLargeNumber = (num: string | number) => {
-    const n = typeof num === 'string' ? parseFloat(num) : num;
-    if (isNaN(n)) return 'N/A';
+    const n = typeof num === 'string' ? Number.parseFloat(num) : num;
+    if (Number.isNaN(n)) return 'N/A';
     
     if (n >= 1e12) return `$${(n / 1e12).toFixed(2)}T`;
     if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
@@ -123,7 +122,7 @@ export function Finance({ financeData }: { financeData?: FinanceData }) {
             <span>{formatLargeNumber(quote.volume)}</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className={cx("size-3 rounded-full", isPositive ? "bg-green-500" : "bg-red-500")}></span>
+            <span className={cx("size-3 rounded-full", isPositive ? "bg-green-500" : "bg-red-500")} />
             <span className="text-zinc-400">{isPositive ? 'Bullish' : 'Bearish'}</span>
           </div>
         </div>
@@ -189,7 +188,7 @@ export function Finance({ financeData }: { financeData?: FinanceData }) {
         
         <div className="flex flex-col gap-3">
           {newsData.news.map((item, index) => (
-            <div key={index} className="border-t border-zinc-800 pt-2">
+            <div key={item.url} className="border-t border-zinc-800 pt-2">
               <div className="text-sm font-medium">{item.title}</div>
               <div className="text-xs text-zinc-400 mt-1 flex justify-between">
                 <span>{item.source}</span>
@@ -205,10 +204,10 @@ export function Finance({ financeData }: { financeData?: FinanceData }) {
   // Fallback for loading state
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4 skeleton-bg max-w-[500px]">
-      <div className="skeleton-div h-6 w-24 rounded"></div>
-      <div className="skeleton-div h-8 w-32 rounded"></div>
-      <div className="skeleton-div h-4 w-full rounded"></div>
-      <div className="skeleton-div h-4 w-3/4 rounded"></div>
+      <div className="skeleton-div h-6 w-24 rounded" />
+      <div className="skeleton-div h-8 w-32 rounded" />
+      <div className="skeleton-div h-4 w-full rounded" />
+      <div className="skeleton-div h-4 w-3/4 rounded" />
     </div>
   );
 }

@@ -50,7 +50,7 @@ export const authConfig = {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: process.env.NODE_ENV === 'development' ? false : true,
+        secure: process.env.NODE_ENV !=='development',
         domain: process.env.NODE_ENV === 'development' ? undefined : '.d2gzk5ozyqicbv.amplifyapp.com',
       },
     },

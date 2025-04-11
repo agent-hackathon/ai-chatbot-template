@@ -1,7 +1,6 @@
 export const runtime = 'nodejs';
 
 import {
-  type Message,
   createDataStreamResponse,
   smoothStream,
   streamText,
