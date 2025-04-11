@@ -1,7 +1,6 @@
 export const runtime = 'nodejs';
 
 import {
-  type Message,
   createDataStreamResponse,
   smoothStream,
   streamText,
@@ -25,6 +24,7 @@ import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
+import { getFinance } from '@/lib/ai/tools/get-finance';
 import getConfig from 'next/config';
 
 const { serverRuntimeConfig } = getConfig();
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
         experimental_activeTools:
           selectedChatModel === 'chat-model-reasoning'
             ? []
-            : ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions'],
+            : ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions','getFinance'],
         experimental_transform: smoothStream({ chunking: 'word' }),
         experimental_generateMessageId: generateUUID,
         tools: {
@@ -86,6 +86,7 @@ export async function POST(request: Request) {
           createDocument: createDocument({ session, dataStream }),
           updateDocument: updateDocument({ session, dataStream }),
           requestSuggestions: requestSuggestions({ session, dataStream }),
+          getFinance,
         },
         onFinish: async ({ response, reasoning }) => {
           console.log('🔥 Chat API POST - Stream finished');
