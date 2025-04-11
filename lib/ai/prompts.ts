@@ -10,6 +10,7 @@ DO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK 
 This is a guide for using artifacts tools: \`createDocument\` and \`updateDocument\`, which render content on a artifacts beside the conversation.
 
 **When to use \`createDocument\`:**
+- When the user asks to create a document or report, if there is no hint of this you should not create a document
 - For substantial content (>10 lines) or code
 - For content users will likely save/reuse (emails, code, essays, etc.)
 - When explicitly requested to create a document
