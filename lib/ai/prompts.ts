@@ -32,7 +32,7 @@ Do not update document right after creating it. Wait for user feedback or reques
 `;
 
 export const regularPrompt =
-  'You are a friendly assistant! Keep your responses concise and helpful.';
+  'You are a friendly assistant! Keep your responses concise and helpful. You have access to a web search tool that allows you to search for up-to-date information on the internet. When the user asks about current events, facts, or any information that would benefit from real-time data, use the webSearch tool to provide accurate and timely responses.';
 
 export const systemPrompt = ({
   selectedChatModel,

@@ -23,6 +23,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { MessageEditor } from './message-editor';
 import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from './message-reasoning';
+import { SearchResults } from './search-results';
 
 const PurePreviewMessage = ({
   chatId,
@@ -90,6 +91,38 @@ const PurePreviewMessage = ({
                 reasoning={message.reasoning}
               />
             )}
+
+            {/* Display web search results if they exist */}
+            {message.role === 'assistant' && message.toolInvocations && 
+              message.toolInvocations.some(tool => 
+                tool.toolName === 'webSearch' && 
+                tool.state === 'result' && 
+                'result' in tool
+              ) && (
+                <>
+                  {message.toolInvocations
+                    .filter(tool => 
+                      tool.toolName === 'webSearch' && 
+                      tool.state === 'result' && 
+                      'result' in tool
+                    )
+                    .map(tool => {
+                      // Type assertion for TypeScript
+                      const webSearchResult = tool.state === 'result' ? tool : null;
+                      if (!webSearchResult || !webSearchResult.result?.results?.length) return null;
+                      
+                      return (
+                        <SearchResults 
+                          key={tool.toolCallId}
+                          results={webSearchResult.result.results}
+                          query={webSearchResult.result.query}
+                        />
+                      );
+                    })
+                  }
+                </>
+              )
+            }
 
             {(message.content || message.reasoning) && mode === 'view' && (
               <div className="flex flex-row gap-2 items-start">
@@ -164,7 +197,7 @@ const PurePreviewMessage = ({
                             result={result}
                             isReadonly={isReadonly}
                           />
-                        ) : (
+                        ) : toolName === 'webSearch' ? null : (
                           <pre>{JSON.stringify(result, null, 2)}</pre>
                         )}
                       </div>

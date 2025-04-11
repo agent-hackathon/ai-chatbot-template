@@ -25,6 +25,7 @@ import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
+import { webSearch } from '@/lib/ai/tools/web-search';
 import getConfig from 'next/config';
 
 const { serverRuntimeConfig } = getConfig();
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
         experimental_activeTools:
           selectedChatModel === 'chat-model-reasoning'
             ? []
-            : ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions'],
+            : ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions', 'webSearch'],
         experimental_transform: smoothStream({ chunking: 'word' }),
         experimental_generateMessageId: generateUUID,
         tools: {
@@ -86,6 +87,7 @@ export async function POST(request: Request) {
           createDocument: createDocument({ session, dataStream }),
           updateDocument: updateDocument({ session, dataStream }),
           requestSuggestions: requestSuggestions({ session, dataStream }),
+          webSearch,
         },
         onFinish: async ({ response, reasoning }) => {
           console.log('🔥 Chat API POST - Stream finished');
@@ -95,16 +97,22 @@ export async function POST(request: Request) {
                 messages: response.messages,
                 reasoning,
               });
-              console.log('🔥 Chat API POST - Saving', sanitizedResponseMessages.length, 'response messages');
-              await saveMessages({
-                messages: sanitizedResponseMessages.map((message) => ({
-                  id: message.id,
-                  chatId: id,
-                  role: message.role,
-                  content: message.content,
-                  createdAt: new Date(),
-                })),
-              });
+              
+              // Only save messages if there are any
+              if (sanitizedResponseMessages.length > 0) {
+                console.log('🔥 Chat API POST - Saving', sanitizedResponseMessages.length, 'response messages');
+                await saveMessages({
+                  messages: sanitizedResponseMessages.map((message) => ({
+                    id: message.id,
+                    chatId: id,
+                    role: message.role,
+                    content: message.content,
+                    createdAt: new Date(),
+                  })),
+                });
+              } else {
+                console.log('🔥 Chat API POST - No messages to save');
+              }
             } catch (error) {
               console.error('🔥 Chat API POST - Failed to save messages:', error);
             }
