@@ -10,17 +10,22 @@ export const getFinance = tool({
       .describe('Type of data to retrieve: quote (latest price), overview (company info), news, or market-heatmap'),
   }),
   execute: async ({ symbol, dataType }) => {
-    // Handle market heatmap widget request
+    // Handle market heatmap widget request (no symbol needed)
     if (dataType === 'market-heatmap') {
       return {
         widgetType: 'market-heatmap'
       };
     }
     
+    // For other data types, symbol is required
+    if (!symbol) {
+      throw new Error(`Symbol is required for dataType: ${dataType}`);
+    }
+    
     // Original Alpha Vantage API logic for other data types
     const apiKey = process.env.ALPHA_VANTAGE_API_KEY;
     
-    if (!apiKey && ['quote', 'overview', 'news'].includes(dataType)) {
+    if (!apiKey) {
       throw new Error('ALPHA_VANTAGE_API_KEY is not set in environment variables');
     }
 
