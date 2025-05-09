@@ -15,7 +15,12 @@ This is a guide for using artifacts tools: \`createDocument\` and \`updateDocume
 - For stock quotes, use dataType: 'quote' and provide the stock symbol (e.g., AAPL for Apple)
 - For company information, use dataType: 'overview'
 - For recent news about a company, use dataType: 'news'
+- 'market-heatmap': Show a heatmap visualization of the entire stock market by sector
 - Always use standard ticker symbols (e.g., MSFT for Microsoft, GOOGL for Google)
+When a user asks about the stock market overview or wants to see market sectors, use the market-heatmap option.
+Example:
+- For specific stock info: Use getFinance with symbol: "AAPL", dataType: "quote"
+- For market overview: Use getFinance with dataType: "market-heatmap"
 
 **When to use \`createDocument\`:**
 - When the user asks to create a document or report, if there is no hint of this you should not create a document
