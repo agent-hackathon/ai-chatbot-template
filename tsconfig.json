@@ -29,5 +29,9 @@
     ".next/types/**/*.ts",
     "next.config.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "lib/db/test-analytics.ts",
+    "scripts/test-db-*.ts"
+  ]
 }
