@@ -2,6 +2,9 @@
 'use client';
 
 import cx from 'classnames';
+import dynamic from 'next/dynamic';
+
+const MarketHeatmap = dynamic(() => import('./tradingview/market-heatmap'), { ssr: false });
 
 interface StockQuote {
   symbol: string;
@@ -37,7 +40,11 @@ interface CompanyNews {
   }>;
 }
 
-type FinanceData = StockQuote | CompanyOverview | CompanyNews;
+interface TradingViewWidget {
+  widgetType: 'market-heatmap';
+}
+
+type FinanceData = StockQuote | CompanyOverview | CompanyNews | TradingViewWidget;
 
 export function Finance({ financeData }: { financeData?: FinanceData }) {
   // Default data for loading state
@@ -52,10 +59,19 @@ export function Finance({ financeData }: { financeData?: FinanceData }) {
   
   const data = financeData || defaultData;
   
+  const isWidget = 'widgetType' in data;
+
   // Determine what type of data we're dealing with
   const isQuote = 'price' in data && 'change' in data;
   const isOverview = 'description' in data && 'industry' in data;
   const isNews = 'news' in data;
+
+  if (isWidget) {
+    const widget = data as TradingViewWidget;
+    if (widget.widgetType === 'market-heatmap') {
+      return <MarketHeatmap />;
+    }
+  }
   
   // Format numbers for display
   const formatNumber = (num: number) => {
