@@ -32,6 +32,11 @@
   - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
 - [NextAuth.js](https://github.com/nextauthjs/next-auth)
   - Simple and secure authentication
+- **Analytics Database Integration**
+  - Built-in database query tool for business analytics and insights
+  - Natural language interface for querying sales, user metrics, and marketing data
+  - Advanced security measures preventing destructive operations
+  - Sample analytics schema with realistic business data
 
 ## Model Providers
 
@@ -59,3 +64,57 @@ pnpm dev
 ```
 
 Your app template should now be running on [localhost:3000](http://localhost:3000/).
+
+## Analytics Database Tool
+
+This chatbot includes a powerful database interaction tool that allows users to query business analytics data using natural language. The tool provides a secure interface for accessing sales metrics, user data, product performance, and marketing insights.
+
+### Features
+
+- **Natural Language Queries**: Ask questions like "How many sales did we have last month?" or "Show me our top performing products"
+- **Multiple Data Sources**: Access user analytics, sales transactions, product performance, marketing campaigns, and user events
+- **Advanced Security**: Built-in protection against SQL injection and destructive operations
+- **Sample Data**: Pre-loaded with realistic business data for immediate testing
+
+### Available Tables
+
+The analytics database includes these tables with sample data:
+
+- **analytics_users**: User information and subscription tiers
+- **sales**: Sales transactions with product details and revenue
+- **user_events**: User interaction tracking and behavior analytics  
+- **product_performance**: Product metrics including views, purchases, and ratings
+- **marketing_campaigns**: Campaign performance with budget, spend, and conversions
+
+### Setup
+
+1. **Environment Configuration**: Add `ANALYTICS_DB_POSTGRES_URL` to your environment variables
+   ```bash
+   # In .env.local
+   ANALYTICS_DB_POSTGRES_URL=your_postgres_connection_string
+   ```
+
+2. **Initialize Database**: The tool will automatically create tables and sample data on first use
+
+3. **Test the Tool**: Run validation tests to ensure everything is working
+   ```bash
+   pnpm test:db-tool
+   ```
+
+### Usage Examples
+
+Once running, you can ask the chatbot questions like:
+
+- "What's our total revenue this quarter?"
+- "Show me user signups by month"
+- "Which products have the highest conversion rates?"
+- "How are our marketing campaigns performing?"
+- "Add a new sale for $150 from user John Doe"
+
+### Security Features
+
+- Only SELECT, INSERT, UPDATE, and DELETE operations allowed
+- DELETE and UPDATE operations require WHERE clauses
+- No DDL operations (DROP, ALTER, TRUNCATE, etc.)
+- Query results limited to 100 rows maximum
+- Built-in SQL injection prevention

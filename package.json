@@ -15,7 +15,9 @@
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",
     "db:check": "drizzle-kit check",
-    "db:up": "drizzle-kit up"
+    "db:up": "drizzle-kit up",
+    "test:db-tool": "tsx scripts/test-db-validation.ts",
+    "test:db-real": "tsx scripts/test-db-real.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.1.17",

@@ -7,37 +7,37 @@ export const authConfig = {
   providers: [],
   callbacks: {
     async authorized({ auth, request: { nextUrl } }) {
-      console.log('🔥 authorized - Path:', nextUrl.pathname, 'Auth:', !!auth?.user);
+      //console.log('🔥 authorized - Path:', nextUrl.pathname, 'Auth:', !!auth?.user);
       const isLoggedIn = !!auth?.user;
       const isOnChat = nextUrl.pathname === '/' || nextUrl.pathname.startsWith('/chat');
       const isOnRegister = nextUrl.pathname.startsWith('/register');
       const isOnLogin = nextUrl.pathname.startsWith('/login');
 
       if (isLoggedIn && (isOnLogin || isOnRegister)) {
-        console.log('🔥 authorized - Logged in, redirecting from login/register to /');
+        //console.log('🔥 authorized - Logged in, redirecting from login/register to /');
         return Response.redirect(new URL('/', nextUrl.origin));
       }
 
       if (isOnRegister || isOnLogin) {
-        console.log('🔥 authorized - Allowing access to register/login');
+        //console.log('🔥 authorized - Allowing access to register/login');
         return true;
       }
 
       if (isOnChat) {
         if (isLoggedIn) {
-          console.log('🔥 authorized - Logged in, allowing chat access');
+          //console.log('🔥 authorized - Logged in, allowing chat access');
           return true;
         }
-        console.log('🔥 authorized - Not logged in, blocking chat');
+        //console.log('🔥 authorized - Not logged in, blocking chat');
         return false;
       }
 
       if (isLoggedIn) {
-        console.log('🔥 authorized - Logged in, redirecting to /');
+        //console.log('🔥 authorized - Logged in, redirecting to /');
         return Response.redirect(new URL('/', nextUrl));
       }
 
-      console.log('🔥 authorized - Default allow');
+      //console.log('🔥 authorized - Default allow');
       return true;
     },
   },

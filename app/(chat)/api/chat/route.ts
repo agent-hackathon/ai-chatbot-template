@@ -25,6 +25,7 @@ import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
 import { getFinance } from '@/lib/ai/tools/get-finance';
+import { queryDatabase } from '@/lib/ai/tools/query-database';
 import getConfig from 'next/config';
 
 const { serverRuntimeConfig } = getConfig();
@@ -33,41 +34,41 @@ process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || serverRuntimeConfig.O
 export const maxDuration = 60;
 
 export async function POST(request: Request) {
-  console.log('🔥 Chat API POST - Request received');
+  //console.log('🔥 Chat API POST - Request received');
   const { id, messages, selectedChatModel } = await request.json();
-  console.log('🔥 Chat API POST - Payload:', { id, messagesCount: messages.length, selectedChatModel });
+  //console.log('🔥 Chat API POST - Payload:', { id, messagesCount: messages.length, selectedChatModel });
 
   const session = await auth();
-  console.log('🔥 Chat API POST - Session:', session ? `User ID: ${session.user?.id}` : 'No session');
+  //console.log('🔥 Chat API POST - Session:', session ? `User ID: ${session.user?.id}` : 'No session');
 
   if (!session || !session.user || !session.user.id) {
-    console.log('🔥 Chat API POST - Unauthorized, rejecting');
+    //console.log('🔥 Chat API POST - Unauthorized, rejecting');
     return new Response('Unauthorized', { status: 401 });
   }
 
   const userMessage = getMostRecentUserMessage(messages);
-  console.log('🔥 Chat API POST - User message:', userMessage?.content || 'None found');
+  //console.log('🔥 Chat API POST - User message:', userMessage?.content || 'None found');
 
   if (!userMessage) {
-    console.log('🔥 Chat API POST - No user message, rejecting');
+    //console.log('🔥 Chat API POST - No user message, rejecting');
     return new Response('No user message found', { status: 400 });
   }
 
   const chat = await getChatById({ id });
-  console.log('🔥 Chat API POST - Chat fetch:', chat ? `ID: ${chat.id}, User: ${chat.userId}` : 'Not found');
+  //console.log('🔥 Chat API POST - Chat fetch:', chat ? `ID: ${chat.id}, User: ${chat.userId}` : 'Not found');
 
   if (!chat) {
-    const title = await generateTitleFromUserMessage({ message: userMessage });
-    console.log('🔥 Chat API POST - Creating new chat with title:', title);
+    const title = await generateTitleFromUserMessage({ message: userMessage }); 
+    //console.log('🔥 Chat API POST - Creating new chat with title:', title);
     await saveChat({ id, userId: session.user.id, title });
   }
 
-  console.log('🔥 Chat API POST - Saving user message');
+  //console.log('🔥 Chat API POST - Saving user message');
   await saveMessages({
     messages: [{ ...userMessage, createdAt: new Date(), chatId: id }],
   });
 
-  console.log('🔥 Chat API POST - Starting stream with model:', selectedChatModel);
+  //console.log('🔥 Chat API POST - Starting stream with model:', selectedChatModel);
   return createDataStreamResponse({
     execute: (dataStream) => {
       const result = streamText({
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
         experimental_activeTools:
           selectedChatModel === 'chat-model-reasoning'
             ? []
-            : ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions','getFinance'],
+            : ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions','getFinance', 'queryDatabase'],
         experimental_transform: smoothStream({ chunking: 'word' }),
         experimental_generateMessageId: generateUUID,
         tools: {
@@ -87,6 +88,7 @@ export async function POST(request: Request) {
           updateDocument: updateDocument({ session, dataStream }),
           requestSuggestions: requestSuggestions({ session, dataStream }),
           getFinance,
+          queryDatabase,
         },
         onFinish: async ({ response, reasoning }) => {
           console.log('🔥 Chat API POST - Stream finished');
