@@ -3,14 +3,26 @@ import { tool } from 'ai';
 import { z } from 'zod';
 
 export const getFinance = tool({
-  description: 'Get financial data about stocks or cryptocurrencies',
+  description: 'Get financial data about stocks, cryptocurrencies, or market overview',
   parameters: z.object({
-    symbol: z.string().describe('Stock or cryptocurrency symbol (e.g., AAPL, BTC-USD)'),
-    dataType: z.enum(['quote', 'overview', 'news'])
-      .describe('Type of data to retrieve: quote (latest price), overview (company info), or news'),
+    symbol: z.string().optional().describe('Stock or cryptocurrency symbol (e.g., AAPL, BTC-USD)'),
+    dataType: z.enum(['quote', 'overview', 'news', 'market-heatmap'])
+      .describe('Type of data to retrieve: quote (latest price), overview (company info), news, or market-heatmap'),
   }),
   execute: async ({ symbol, dataType }) => {
-    // Get API key from environment variables
+    // Handle market heatmap widget request (no symbol needed)
+    if (dataType === 'market-heatmap') {
+      return {
+        widgetType: 'market-heatmap'
+      };
+    }
+    
+    // For other data types, symbol is required
+    if (!symbol) {
+      throw new Error(`Symbol is required for dataType: ${dataType}`);
+    }
+    
+    // Original Alpha Vantage API logic for other data types
     const apiKey = process.env.ALPHA_VANTAGE_API_KEY;
     
     if (!apiKey) {
